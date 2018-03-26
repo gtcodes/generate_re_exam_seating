@@ -40,15 +40,23 @@ def main():
     uniqueStudents = mergeDuplicates(allStudents)
 
     (computerNeeded, noComputer) = splitStudents(uniqueStudents)
-
-    #TODO remove duplicate and update times
+    
+    for student in uniqueStudents:
+        print(student)
     
     #TODO update to pick indecies and send people to createSeating
     
 # merge students that write multiple tests into one person
 # with a list of times rather than just a single value
 def mergeDuplicates(students):
-    #TODO
+    length = len(students)
+    i = 0
+    while i < length - 1:
+        if(students[i].name == students[i+1].name):
+            students[i+1].merge(students[i])
+            length-=1
+            del students[i]
+        i += 1
     return students
 
 def splitStudents(students):

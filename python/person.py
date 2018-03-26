@@ -7,5 +7,11 @@ class Person:
         self.testTime.append(testTimes)
         self.hasComputer = hasComputer
 
+    def merge(self, other):
+        for times in other.testTime:
+            self.testTime.append(times)
+        self.hasComputer = self.hasComputer or other.hasComputer
+        self.numberOfTests += other.numberOfTests
+    
     def __str__(self):
         return "Name = %s, number of tests = %s, has computer = %s, TestTimes = %s\n" % (self.name, self.numberOfTests, self.hasComputer, self.testTime)
