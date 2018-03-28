@@ -1,5 +1,5 @@
 from room import Room
 
-a = Room("testRoom",6,6)
+a = Room("testRoom",2,2)
 
-print(a.createSeating())
+print(a.createSeating(['a','b','c','d','e']))
