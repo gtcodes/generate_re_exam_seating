@@ -22,8 +22,11 @@ class Room():
         colsNeeded = math.floor(len(students) / self.rows)
         if(colsNeeded > 2 * self.cols):
             raise ValueError('Too many students assigned to room ' + self.name)
-        numberOfDoubleCols = colsNeeded % self.cols
-        studentsInLastCol = len(students) % self.rows
+        numberOfDoubleCols = 0
+        studentsInLastCol = 0
+        if(colsNeeded > self.cols):
+            numberOfDoubleCols = colsNeeded % self.cols
+            studentsInLastCol = len(students) % self.rows
         currentStudent = 0
         tableCode = ''
         for col in range(0,self.cols):

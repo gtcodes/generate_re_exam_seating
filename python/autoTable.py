@@ -39,7 +39,7 @@ def main():
     plans = createSeatingPlan(noComputer, computerNeeded)
 
     for plan in plans:
-        with open(plan[0]+'.tex','w') as f:
+        with open('../tex/'+plan[0]+'.tex','w') as f:
             f.write(plan[1])
     
 # merge students that write multiple tests into one person
