@@ -37,16 +37,16 @@ class Room():
                 if(currentStudent == len(students)):
                     return tableCode
     
-    def wholeTable(self, row, col, name):
+    def wholeTable(self, row, col, student):
         widthOffs = col * (self.tableWidth + 1) + (self.tableWidth/4) #divide by 4, half of a half table
         heightOffs = row * (- self.tableHeight - 1)
-        return self.createTable(self.tableWidth, self.tableHeight, widthOffs, heightOffs, name)
+        return self.createTable(self.tableWidth, self.tableHeight, widthOffs, heightOffs, student.name)
 
-    def splitTable(self, row, col, name1, name2):
+    def splitTable(self, row, col, student1, student2):
         widthOffs = col * (self.tableWidth + 1) #dup
         heightOffs = row * (- self.tableHeight - 1) #dup
-        returnString = self.createTable(self.tableWidth/2, self.tableHeight, widthOffs, heightOffs, name1)
-        returnString += self.createTable(self.tableWidth/2, self.tableHeight, widthOffs + self.tableWidth/2, heightOffs, name2)
+        returnString = self.createTable(self.tableWidth/2, self.tableHeight, widthOffs, heightOffs, student1.name)
+        returnString += self.createTable(self.tableWidth/2, self.tableHeight, widthOffs + self.tableWidth/2, heightOffs, student2.name)
         return returnString
 
     def createTable(self, width, height, widthOffs, heightOffs, name):

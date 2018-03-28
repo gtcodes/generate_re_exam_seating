@@ -6,9 +6,9 @@ from person import Person
 #T26 - 15 bord, 2 med 3 platser
 T13 = Room("T13",6,6)
 T14 = Room("T14",5,5)
-T3 = Room("T3",4,8)
-T4 = Room("T4",4,8)
-T26 = Room("T26",6,5)
+T3 = Room("T3",4,4)
+T4 = Room("T4",4,4)
+T26 = Room("T26",3,5)
 
 inputFile = "../newexcelldata.xls"
 
@@ -24,10 +24,8 @@ def readGTCCsv(inputFile, delim = '\t', hasComputerCol = 8, nameCol = 1, timeCol
     return returnList
 
 def main():
-    #TODO markera om test är i två delar
-    #TODO sortera först sedan ta bort dups, sedan splitta i två listor.
+    #TODO markera om test är i två delar?
     allStudents = readGTCCsv(inputFile, hasComputerCol = 8, delim=';')
-    
     try:
         import operator
     except ImportError:
@@ -36,15 +34,13 @@ def main():
         keyfun = operator.attrgetter("name")
 
     allStudents.sort(key = keyfun, reverse = False)
-    
     uniqueStudents = mergeDuplicates(allStudents)
-
     (computerNeeded, noComputer) = splitStudents(uniqueStudents)
-    
-    for student in uniqueStudents:
-        print(student)
-    
-    #TODO update to pick indecies and send people to createSeating
+    plans = createSeatingPlan(noComputer, computerNeeded)
+
+    for plan in plans:
+        with open(plan[0]+'.tex','w') as f:
+            f.write(plan[1])
     
 # merge students that write multiple tests into one person
 # with a list of times rather than just a single value
@@ -69,43 +65,70 @@ def splitStudents(students):
             noComputer.append(student)
     return(computerNeeded, noComputer)
 
-def divideNonComputerPeople(noComputer, computerNeeded, roomsToUse, allowNonComputerFolksInT26):
+def createSeatingPlan(noComputer, computerNeeded, allowNonComputerFolksInT26 = True):
     totalNumberOfStudents = len(noComputer) + len(computerNeeded)
     if(len(computerNeeded) > 32):
         print("WARNING! More than 32 people need computer.")
     
-    numberOfRooms = len(roomsToUse)
-    numberOfOptPlaces = 0
-    
-    for room in roomsToUse:
-        numberOfOptPlaces += room.optNumberOfPeople()
-    '''
-    if(noComputer <= 36):
-        createSeatingT13(noComputer)
-    else if(noComputer <= 61):
-        createSeatingT13(36)
-        createSeatingT14(noComputer-36)
-    else if(noComputer <= 97):
-        createSeatingT14(25)
-        createSeatingT13(noComputer-25)
-    else if(noComputer <= 122):
-        createSeatingT13(72)
-        createSeatingT14(noComputer-72)
-    else if(noComputer <= 154)
-    '''
+    T26Plan = createRoomSeating(T26, computerNeeded)
 
-#These functions could be placed inside the room class, with each room extending the base room class
-#unsure if that really helps however.
-def createSeatingT13(people):
-    #TODO
-    return 0
+    numberOfNoComputer = len(noComputer)
+    T13Plan = ''
+    T14Plan = ''
+    T3Plan = ''
+    if(numberOfNoComputer <= 36):
+        T13Plan = createRoomSeating(T13, noComputer)
+    elif(numberOfNoComputer <= 61):
+        T13Plan = createRoomSeating(T13, noComputer[0:35])
+        T14Plan = createRoomSeating(T14, noComputer[36:])
+    elif(numberOfNoComputer <= 97):
+        T14Plan = createRoomSeating(T14, noComputer[0:24])
+        T13Plan = createRoomSeating(T13, noComputer[25:])
+    elif(noComputer <= 129):
+        T13Plan = createRoomSeating(T13, noComputer[0:71])
+        T14Plan = createRoomSeating(T14, noComputer[72:96])
+        T3Plan = createRoomSeating(T3, noComputer[97:])
 
-def createSeatingT14(people):
-    #TODO
-    return 0
-def createSeatingTX(people):
-    #TODO
-    return 0
+    return(('T26',T26Plan), ('T13', T13Plan),('T14',T14Plan),('T3',T3Plan))
 
+def createRoomSeating(room, students):
+    seating = createLatexHeader()
+    seating += room.createSeating(students)
+    seating += createLatexFooter()
+    return seating
+
+def createLatexHeader():
+    return( '\\documentclass{article}\n' +
+            '\\usepackage[utf8]{inputenc}\n' +
+            '\\usepackage{adjustbox}\n' +
+            '\\usepackage{tikz}\n' +
+            '\\usepackage{varwidth}\n' +
+            '\\usepackage{pdflscape}\n' +
+            '\\usepackage{fancyhdr}\n' +
+            '\\setlength{\\topmargin}{-.3 in}\n' +
+            '\\setlength{\\oddsidemargin}{0in}\n' +
+            '\\setlength{\\evensidemargin}{0in}\n' +
+            '\\setlength{\\textheight}{9.5in}\n' +
+            '\\setlength{\\textwidth}{6.5in}\n' +
+            '\n' +
+            '\\begin{document}\n' +
+            '\\begin{landscape}\n' +
+            '{\\centering\n' +
+            '\\section*{Scen}\\vspace{0.5cm}\n' +
+            '}\n' +
+            '\n' +
+            '\\thispagestyle{fancy}\n' +
+            '\\renewcommand{\\headrulewidth}{0.4pt} %sets size of header bar\n' +
+            '\n' +
+            '\\begin{tikzpicture}\n'
+            )
+
+def createLatexFooter():
+    return( '\\end{tikzpicture}\n' +
+            '\\pagenumbering{gobble}\n' +
+            '\\chead{\\large Resterande del av skolan}\n' +
+            '\\end{landscape}\n' +
+            '\\end{document}\n'
+            )
 
 main()
