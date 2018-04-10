@@ -6,11 +6,12 @@ class Room():
     tableWidth = 5.4
     tableHeight = 2.5
 
-    def __init__(self, name, col, row):
+    def __init__(self, name, col, row, seatingOffs):
         self.name=name
         self.cols=col
         self.rows=row
-        self.students=[]
+        self.students = []
+        self.seatingOffs = seatingOffs
     
     def optNumberOfPeople(self):
         return self.rows*self.cols
@@ -41,13 +42,13 @@ class Room():
                     return tableCode
     
     def wholeTable(self, row, col, student):
-        widthOffs = col * (self.tableWidth + 1) + (self.tableWidth/4) #divide by 4, half of a half table
-        heightOffs = row * (- self.tableHeight - 1)
+        widthOffs = col * (self.tableWidth + 1) + (self.tableWidth/4) + self.seatingOffs #divide by 4, half of a half table
+        heightOffs = row * (- self.tableHeight - 1) - self.seatingOffs
         return self.createTable(self.tableWidth, self.tableHeight, widthOffs, heightOffs, student.name)
 
     def splitTable(self, row, col, student1, student2):
-        widthOffs = col * (self.tableWidth + 1) #dup
-        heightOffs = row * (- self.tableHeight - 1) #dup
+        widthOffs = col * (self.tableWidth + 1) + self.seatingOffs 
+        heightOffs = row * (- self.tableHeight - 1) - self.seatingOffs
         returnString = self.createTable(self.tableWidth/2, self.tableHeight, widthOffs, heightOffs, student1.name)
         returnString += self.createTable(self.tableWidth/2, self.tableHeight, widthOffs + self.tableWidth/2, heightOffs, student2.name)
         return returnString

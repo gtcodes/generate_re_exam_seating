@@ -4,11 +4,11 @@ from room import Room
 from person import Person
 
 #T26 - 15 bord, 2 med 3 platser
-T13 = Room("T13",6,6)
-T14 = Room("T14",5,5)
-T3 = Room("T3",4,4)
-T4 = Room("T4",4,4)
-T26 = Room("T26",3,5)
+T13 = Room("T13",6,6,0)
+T14 = Room("T14",5,5,4)
+T3 = Room("T3",4,4,0)
+T4 = Room("T4",4,4,0)
+T26 = Room("T26",3,5,0)
 
 inputFile = "../2018-04-03.xls"
 
@@ -114,15 +114,15 @@ def createLatexHeader():
             '\\setlength{\\textheight}{370mm}\n'
             '\\setlength{\\textwidth}{290mm}\n'
             '\n'
-            '\n'
             '\\begin{document}\n'
             '\\begin{landscape}\n'
             '\n'
             '\\begin{centering}\n'
-            '\\section*{\\Huge Scen} \\vspace{5mm}\n'
+            '\\section*{\\Huge Fram mot tavla och scen} \\vspace{5mm}\n'
             '\\end{centering}\n'
             '\n'
             '\\begin{tikzpicture}\n'
+            '\\node[draw=none]at(0,0){};\n'
             )
 
 def createLatexFooter():
