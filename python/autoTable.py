@@ -10,22 +10,22 @@ T3 = Room("T3",4,4)
 T4 = Room("T4",4,4)
 T26 = Room("T26",3,5)
 
-inputFile = "../newexcelldata.xls"
+inputFile = "../2018-04-03.xls"
 
-def readGTCCsv(inputFile, delim = '\t', hasComputerCol = 8, nameCol = 1, timeCol = 5):
+def readGTCCsv(inputFile, delim = '\t', hasComputerCol = 6, nameCol = 1, timeCol = 5):
     returnList = []
     with codecs.open(inputFile, mode='r', encoding='iso-8859-1') as csvFile:
         csvFile.readline() #skips first line
         for lines in csvFile:
             personRow = [x.strip() for x in lines.split(delim)]
-            hasComputer = (personRow[hasComputerCol] != '')
+            hasComputer = (personRow[hasComputerCol] == 'x')
             p = Person(personRow[nameCol], personRow[timeCol], hasComputer)
             returnList.append(p)
     return returnList
 
 def main():
     #TODO markera om test är i två delar?
-    allStudents = readGTCCsv(inputFile, hasComputerCol = 8, delim=';')
+    allStudents = readGTCCsv(inputFile)
     try:
         import operator
     except ImportError:
@@ -36,8 +36,8 @@ def main():
     allStudents.sort(key = keyfun, reverse = False)
     uniqueStudents = mergeDuplicates(allStudents)
     (computerNeeded, noComputer) = splitStudents(uniqueStudents)
+    print(str(len(computerNeeded)) + "    " + str(len(noComputer)))
     plans = createSeatingPlan(noComputer, computerNeeded)
-
     for plan in plans:
         with open('../tex/'+plan[0]+'.tex','w') as f:
             f.write(plan[1])
@@ -69,9 +69,10 @@ def createSeatingPlan(noComputer, computerNeeded, allowNonComputerFolksInT26 = T
     totalNumberOfStudents = len(noComputer) + len(computerNeeded)
     if(len(computerNeeded) > 32):
         print("WARNING! More than 32 people need computer.")
+    T26Plan = ''
+    if(len(computerNeeded) > 0):
+        T26Plan = createRoomSeating(T26, computerNeeded)
     
-    T26Plan = createRoomSeating(T26, computerNeeded)
-
     numberOfNoComputer = len(noComputer)
     T13Plan = ''
     T14Plan = ''
@@ -79,14 +80,14 @@ def createSeatingPlan(noComputer, computerNeeded, allowNonComputerFolksInT26 = T
     if(numberOfNoComputer <= 36):
         T13Plan = createRoomSeating(T13, noComputer)
     elif(numberOfNoComputer <= 61):
-        T13Plan = createRoomSeating(T13, noComputer[0:35])
+        T13Plan = createRoomSeating(T13, noComputer[0:36])
         T14Plan = createRoomSeating(T14, noComputer[36:])
     elif(numberOfNoComputer <= 97):
-        T14Plan = createRoomSeating(T14, noComputer[0:24])
+        T14Plan = createRoomSeating(T14, noComputer[0:25])
         T13Plan = createRoomSeating(T13, noComputer[25:])
     elif(noComputer <= 129):
-        T13Plan = createRoomSeating(T13, noComputer[0:71])
-        T14Plan = createRoomSeating(T14, noComputer[72:96])
+        T13Plan = createRoomSeating(T13, noComputer[0:72])
+        T14Plan = createRoomSeating(T14, noComputer[72:97])
         T3Plan = createRoomSeating(T3, noComputer[97:])
 
     return(('T26',T26Plan), ('T13', T13Plan),('T14',T14Plan),('T3',T3Plan))
@@ -98,37 +99,41 @@ def createRoomSeating(room, students):
     return seating
 
 def createLatexHeader():
-    return( '\\documentclass{article}\n' +
-            '\\usepackage[utf8]{inputenc}\n' +
-            '\\usepackage{adjustbox}\n' +
-            '\\usepackage{tikz}\n' +
-            '\\usepackage{varwidth}\n' +
-            '\\usepackage{pdflscape}\n' +
-            '\\usepackage{fancyhdr}\n' +
-            '\\setlength{\\topmargin}{-.3 in}\n' +
-            '\\setlength{\\oddsidemargin}{0in}\n' +
-            '\\setlength{\\evensidemargin}{0in}\n' +
-            '\\setlength{\\textheight}{9.5in}\n' +
-            '\\setlength{\\textwidth}{6.5in}\n' +
-            '\n' +
-            '\\begin{document}\n' +
-            '\\begin{landscape}\n' +
-            '{\\centering\n' +
-            '\\section*{Scen}\\vspace{0.5cm}\n' +
-            '}\n' +
-            '\n' +
-            '\\thispagestyle{fancy}\n' +
-            '\\renewcommand{\\headrulewidth}{0.4pt} %sets size of header bar\n' +
-            '\n' +
+    return( '\\documentclass{article}\n'
+            '\\usepackage[paperheight=420mm,paperwidth=297mm]{geometry}\n'
+            '\\usepackage[utf8]{inputenc}\n'
+            '\\usepackage{adjustbox}\n'
+            '\\usepackage{tikz}\n'
+            '\\usepackage{varwidth}\n'
+            '\\usepackage{pdflscape}\n'
+            '\n'
+            '\\setlength{\\topmargin}{8mm}\n'
+            '\\setlength{\\oddsidemargin}{0in}\n'
+            '\\setlength{\\evensidemargin}{0in}\n'
+            '\n'
+            '\\setlength{\\textheight}{370mm}\n'
+            '\\setlength{\\textwidth}{290mm}\n'
+            '\n'
+            '\n'
+            '\\begin{document}\n'
+            '\\begin{landscape}\n'
+            '\n'
+            '\\begin{centering}\n'
+            '\\section*{\\Huge Scen} \\vspace{5mm}\n'
+            '\\end{centering}\n'
+            '\n'
             '\\begin{tikzpicture}\n'
             )
 
 def createLatexFooter():
-    return( '\\end{tikzpicture}\n' +
-            '\\pagenumbering{gobble}\n' +
-            '\\chead{\\large Resterande del av skolan}\n' +
-            '\\end{landscape}\n' +
+    return( '\n'
+            '\\node[draw=none, rotate=90] at (38, -9) {\\Huge \\textbf{Resterande del av skolan}};\n'
+            '\n'
+            '\\end{tikzpicture}\n'
+            '\n'
+            '\\pagenumbering{gobble}\n'
+            '\\end{landscape}\n'
             '\\end{document}\n'
-            )
+)
 
 main()

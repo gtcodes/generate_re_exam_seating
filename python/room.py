@@ -3,8 +3,8 @@ import math
 
 class Room():
         
-    tableWidth = 3
-    tableHeight = 1.5
+    tableWidth = 5.4
+    tableHeight = 2.5
 
     def __init__(self, name, col, row):
         self.name=name
@@ -53,4 +53,4 @@ class Room():
         return returnString
 
     def createTable(self, width, height, widthOffs, heightOffs, name):
-        return '\n\\node [draw, minimum width=' + str(width) + 'cm, minimum height='+ str(height) + 'cm, anchor=base] at(' + str(widthOffs) + ',' + str(heightOffs) + ') {\\begin{varwidth}{1.5cm}' + name + '\\end{varwidth}};'
+        return '\n\\node [draw, minimum width=' + str(width) + 'cm, minimum height='+ str(height) + 'cm, anchor=base] at(' + str(widthOffs) + ',' + str(heightOffs) + ') {\\begin{varwidth}{' + str(width-0.5) + 'cm}' + '\large ' + name + '\\end{varwidth}};'
