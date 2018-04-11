@@ -1,5 +1,6 @@
 import codecs
 import operator
+import sys
 from room import Room
 from person import Person
 
@@ -10,7 +11,9 @@ T3 = Room("T3",4,4,0)
 T4 = Room("T4",4,4,0)
 T26 = Room("T26",3,5,0)
 
-inputFile = "../2018-04-03.xls"
+inputFile = sys.argv[1]
+texDir = sys.argv[2]
+delim = sys.argv[3]
 
 def readGTCCsv(inputFile, delim = '\t', hasComputerCol = 6, nameCol = 1, timeCol = 5):
     returnList = []
@@ -24,7 +27,6 @@ def readGTCCsv(inputFile, delim = '\t', hasComputerCol = 6, nameCol = 1, timeCol
     return returnList
 
 def main():
-    #TODO markera om test är i två delar?
     allStudents = readGTCCsv(inputFile)
     try:
         import operator
@@ -36,11 +38,11 @@ def main():
     allStudents.sort(key = keyfun, reverse = False)
     uniqueStudents = mergeDuplicates(allStudents)
     (computerNeeded, noComputer) = splitStudents(uniqueStudents)
-    print(str(len(computerNeeded)) + "    " + str(len(noComputer)))
     plans = createSeatingPlan(noComputer, computerNeeded)
     for plan in plans:
-        with open('../tex/'+plan[0]+'.tex','w') as f:
-            f.write(plan[1])
+        if(plan[1]!=''):
+            with open(texDir + '/' + plan[0]+'.tex','w') as f:
+                f.write(plan[1])
     
 # merge students that write multiple tests into one person
 # with a list of times rather than just a single value
