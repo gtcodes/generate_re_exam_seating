@@ -17,6 +17,7 @@ while getopts ":s:i:d:hkn" opt; do
       printf "\n-k flag for keeping all .log and .aux files from pdflatex."
       printf "\n-d <directory>. This changes the directory which the pdf and tex files are stored in. Note that this directory must exist and will not be created. The standard directory is ./pdf."
       printf "\n-h display this text."
+      exit
       ;;
     i)
       csvFile=$OPTARG
