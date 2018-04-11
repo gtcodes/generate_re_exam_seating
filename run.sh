@@ -2,7 +2,7 @@ texDir="pdf"
 separator='a\t'
 noCsv=1
 clearPdfDir=1
-while getopts ":s:i:d:hn" opt; do
+while getopts ":s:i:d:hkn" opt; do
   case $opt in
     s)
       separator=$OPTARG
