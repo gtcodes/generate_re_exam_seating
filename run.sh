@@ -56,7 +56,7 @@ if [ $clearPdfDir = 1 ]; then
   do
     for file in $i
     do
-      echo $file
+      rm $file
     done
   done
 fi
