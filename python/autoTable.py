@@ -1,21 +1,21 @@
 import codecs
 import operator
 import sys
-from room import Room
+from listRoom import ListRoom
+from bigRoom import BigRoom
 from person import Person
 
 #T26 - 15 bord, 2 med 3 platser
-T13 = Room("T13",6,6,0)
-T14 = Room("T14",5,5,4)
-T3 = Room("T3",4,4,0)
-T4 = Room("T4",4,4,0)
-T26 = Room("T26",3,5,0)
+T13 = BigRoom("T13",6,6,0)
+T14 = BigRoom("T14",5,5,4)
+T26 = ListRoom("T26",3,5)
+T3 = ListRoom("T3",4,4)
 
 inputFile = sys.argv[1]
 texDir = sys.argv[2]
 delim = sys.argv[3]
 
-def readGTCCsv(inputFile, delim = '\t', hasComputerCol = 6, nameCol = 1, timeCol = 5):
+def readGTCCsv(inputFile, delim = '\t', hasComputerCol = 8, nameCol = 1, timeCol = 5):
     returnList = []
     with codecs.open(inputFile, mode='r', encoding='iso-8859-1') as csvFile:
         csvFile.readline() #skips first line
@@ -95,47 +95,10 @@ def createSeatingPlan(noComputer, computerNeeded, allowNonComputerFolksInT26 = T
     return(('T26',T26Plan), ('T13', T13Plan),('T14',T14Plan),('T3',T3Plan))
 
 def createRoomSeating(room, students):
-    seating = createLatexHeader()
+    seating = room.latexHeader()
     seating += room.createSeating(students)
-    seating += createLatexFooter()
+    seating += room.latexFooter()
     return seating
 
-def createLatexHeader():
-    return( '\\documentclass{article}\n'
-            '\\usepackage[paperheight=420mm,paperwidth=297mm]{geometry}\n'
-            '\\usepackage[utf8]{inputenc}\n'
-            '\\usepackage{adjustbox}\n'
-            '\\usepackage{tikz}\n'
-            '\\usepackage{varwidth}\n'
-            '\\usepackage{pdflscape}\n'
-            '\n'
-            '\\setlength{\\topmargin}{8mm}\n'
-            '\\setlength{\\oddsidemargin}{0in}\n'
-            '\\setlength{\\evensidemargin}{0in}\n'
-            '\n'
-            '\\setlength{\\textheight}{370mm}\n'
-            '\\setlength{\\textwidth}{290mm}\n'
-            '\n'
-            '\\begin{document}\n'
-            '\\begin{landscape}\n'
-            '\n'
-            '\\begin{centering}\n'
-            '\\section*{\\Huge Fram mot tavla och scen} \\vspace{5mm}\n'
-            '\\end{centering}\n'
-            '\n'
-            '\\begin{tikzpicture}\n'
-            '\\node[draw=none]at(0,0){};\n'
-            )
-
-def createLatexFooter():
-    return( '\n'
-            '\\node[draw=none, rotate=90] at (38, -9) {\\Huge \\textbf{Resterande del av skolan}};\n'
-            '\n'
-            '\\end{tikzpicture}\n'
-            '\n'
-            '\\pagenumbering{gobble}\n'
-            '\\end{landscape}\n'
-            '\\end{document}\n'
-)
 
 main()

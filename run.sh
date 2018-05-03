@@ -1,5 +1,5 @@
 texDir="pdf"
-separator='a\t'
+separator="\t"
 noCsv=1
 clearPdfDir=1
 while getopts ":s:i:d:hkn" opt; do
