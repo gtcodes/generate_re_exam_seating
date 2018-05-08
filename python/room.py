@@ -10,6 +10,10 @@ class Room(ABC):
         self.rows=row
         self.students = []
     
+    @abstractmethod
+    def getPaperSize(self):
+        return NotImplemented
+    
     def optNumberOfPeople(self):
         return self.rows*self.cols
 

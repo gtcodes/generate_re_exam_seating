@@ -11,6 +11,9 @@ class ListRoom(Room):
             seating += "\\item " + s.name + '\n'
         return(seating)
     
+    def getPaperSize(self):
+        return ('A4')
+
     def latexHeader(self):
         return ('\\documentclass{article}\n'
                 '\\usepackage[utf8]{inputenc}\n'

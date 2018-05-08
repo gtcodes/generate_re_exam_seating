@@ -39,10 +39,20 @@ def main():
     uniqueStudents = mergeDuplicates(allStudents)
     (computerNeeded, noComputer) = splitStudents(uniqueStudents)
     plans = createSeatingPlan(noComputer, computerNeeded)
+    #clear the printer info file
+    with open(texDir + '/' + 'printInfo.txt','w') as printInfoFile:
+        printInfoFile.write('\n') #empty to not allow single line files for some bash bug?
     for plan in plans:
+        print(plan)
         if(plan[1]!=''):
-            with open(texDir + '/' + plan[0]+'.tex','w') as f:
+            baseFileName = plan[0].name
+            fileName = baseFileName + '.tex'
+            pdfName = baseFileName + '.pdf'
+            print(fileName)
+            with open(texDir + '/' + fileName,'w') as f:
                 f.write(plan[1])
+            with open(texDir + '/' + 'printInfo.txt','a') as printInfoFile: #disgusting hack
+                printInfoFile.write(pdfName + ' ' + plan[0].getPaperSize()+'\n')
     
 # merge students that write multiple tests into one person
 # with a list of times rather than just a single value
@@ -92,7 +102,7 @@ def createSeatingPlan(noComputer, computerNeeded, allowNonComputerFolksInT26 = T
         T14Plan = createRoomSeating(T14, noComputer[72:97])
         T3Plan = createRoomSeating(T3, noComputer[97:])
 
-    return(('T26',T26Plan), ('T13', T13Plan),('T14',T14Plan),('T3',T3Plan))
+    return((T26,T26Plan), (T13, T13Plan),(T14,T14Plan),(T3,T3Plan))
 
 def createRoomSeating(room, students):
     seating = room.latexHeader()

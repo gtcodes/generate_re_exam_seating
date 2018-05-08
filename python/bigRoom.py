@@ -10,6 +10,10 @@ class BigRoom(Room):
         super().__init__(name, col, row)
         self.seatingOffs = seatingOffs
 
+
+    def getPaperSize(self):
+        return('A3')
+
     def createSeating(self, students):
         colsNeeded = math.floor(len(students) / self.rows)
         if(colsNeeded > 2 * self.cols):
