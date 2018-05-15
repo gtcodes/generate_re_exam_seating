@@ -75,12 +75,10 @@ if [ $print = 1 ]; then
   do
     while read p
     do
-      echo $p
       IFS=' '
       read -ra Field <<< "$p"
-      echo "$texDir/${Field[0]}" "$file" 
       if [ $texDir/${Field[0]} = "$file" ]; then
-        echo lp -d torg $file -o media="${Field[1]}"
+        lp -d torg $file -o media="${Field[1]}" -n 3
       fi
     done <"$texDir/printInfo.txt"
   done

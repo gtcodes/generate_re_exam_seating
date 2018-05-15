@@ -15,15 +15,16 @@ inputFile = sys.argv[1]
 texDir = sys.argv[2]
 delim = sys.argv[3]
 
-def readGTCCsv(inputFile, delim = '\t', hasComputerCol = 8, nameCol = 1, timeCol = 5):
+def readGTCCsv(inputFile, delim = '\t', hasComputerCol = 8, nameCol = 1, timeCol = 5, acceptedCol = 6):
     returnList = []
     with codecs.open(inputFile, mode='r', encoding='iso-8859-1') as csvFile:
         csvFile.readline() #skips first line
         for lines in csvFile:
             personRow = [x.strip() for x in lines.split(delim)]
-            hasComputer = (personRow[hasComputerCol] == 'x')
-            p = Person(personRow[nameCol], personRow[timeCol], hasComputer)
-            returnList.append(p)
+            if(personRow[acceptedCol] == "Ja"):
+                hasComputer = (personRow[hasComputerCol] == 'x')
+                p = Person(personRow[nameCol], personRow[timeCol], hasComputer)
+                returnList.append(p)
     return returnList
 
 def main():
@@ -43,12 +44,10 @@ def main():
     with open(texDir + '/' + 'printInfo.txt','w') as printInfoFile:
         printInfoFile.write('\n') #empty to not allow single line files for some bash bug?
     for plan in plans:
-        print(plan)
         if(plan[1]!=''):
             baseFileName = plan[0].name
             fileName = baseFileName + '.tex'
             pdfName = baseFileName + '.pdf'
-            print(fileName)
             with open(texDir + '/' + fileName,'w') as f:
                 f.write(plan[1])
             with open(texDir + '/' + 'printInfo.txt','a') as printInfoFile: #disgusting hack

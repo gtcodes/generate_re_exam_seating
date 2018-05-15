@@ -15,6 +15,7 @@ class BigRoom(Room):
         return('A3')
 
     def createSeating(self, students):
+        print("Room " + self.name + " has " + str(len(students)) + " students")
         colsNeeded = math.floor(len(students) / self.rows)
         if(colsNeeded > 2 * self.cols):
             raise ValueError('Too many students assigned to room ' + self.name)

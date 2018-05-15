@@ -6,6 +6,7 @@ class ListRoom(Room):
         super().__init__(name, col, row)
 
     def createSeating(self, students):
+        print("Room " + self.name + " has " + str(len(students)) + " students")
         seating = ''
         for s in students:
             seating += "\\item " + s.name + '\n'
