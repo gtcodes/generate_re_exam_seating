@@ -6,7 +6,8 @@ noCsv=1
 clearPdfDir=1
 print=0
 download=0
-while getopts ":s:i:d:t:hpkn" opt; do
+numberOfCopies=0
+while getopts ":s:i:d:t:hp:kn" opt; do
   case $opt in
     s)
       separator=$OPTARG
@@ -23,7 +24,7 @@ while getopts ":s:i:d:t:hpkn" opt; do
       printf "\n-d <date> for specifying a date which the re-exam occures. Format is yyyy-mm-dd"
       printf "\n-t <Tex directory>. This changes the directory which the pdf and tex files are stored in."
       printf "\n    Note that this directory must exist and will not be created. The standard directory is ./pdf."
-      printf "\n-p flag will print the results to the standard printer"
+      printf "\n-p <number> will ask to print the specified number of copies of the results to the standard printer"
       printf "\n-h display this text."
       exit
       ;;
@@ -44,6 +45,7 @@ while getopts ":s:i:d:t:hpkn" opt; do
       echo $texDir
       ;;
     p)
+      numberOfCopies=$OPTARG
       print=1
       ;;
     ?)
@@ -71,17 +73,21 @@ do
 done
 
 if [ $print = 1 ]; then
-  for file in $texDir/*.pdf
-  do
-    while read p
+  echo "do you really wish to print? y/N"
+  read awns
+  if [ "$awns" == "y" ]; then
+    for file in $texDir/*.pdf
     do
-      IFS=' '
-      read -ra Field <<< "$p"
-      if [ $texDir/${Field[0]} = "$file" ]; then
-        lp -d torg $file -o media="${Field[1]}" -n 3
-      fi
-    done <"$texDir/printInfo.txt"
-  done
+      while read p
+      do
+        IFS=' '
+        read -ra Field <<< "$p"
+        if [ $texDir/${Field[0]} = "$file" ]; then
+          lp -d torg $file -o media="${Field[1]}" -n "$numberOfCopies"
+        fi
+      done <"$texDir/printInfo.txt"
+    done
+  fi
 fi
 
 if [ $clearPdfDir = 1 ]; then
