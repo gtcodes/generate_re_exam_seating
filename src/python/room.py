@@ -31,3 +31,11 @@ class Room(ABC):
     @abstractmethod
     def latexFooter(self):
         return NotImplemented
+
+    @abstractmethod
+    def adminLatexHeader(self):
+        return NotImplemented
+
+    @abstractmethod
+    def adminLatexFooter(self):
+        return NotImplemented

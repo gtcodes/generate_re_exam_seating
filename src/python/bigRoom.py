@@ -28,15 +28,16 @@ class BigRoom(Room):
         tableCode = ''
         for col in range(0,self.cols):
             for row in range(0,self.rows):
+                if(currentStudent == len(students)):
+                    tableCode += self.drawBlankTable(row,col)
+                    continue
                 if(col < numberOfDoubleCols or (col == numberOfDoubleCols and row < studentsInLastCol)):
                     tableCode += self.splitTable(row, col, students[currentStudent], students[currentStudent + 1])
                     currentStudent += 2
                 else:
                     tableCode += self.wholeTable(row, col, students[currentStudent])
                     currentStudent += 1
-                if(currentStudent == len(students)):
-                    return tableCode
-    
+        return tableCode
     def wholeTable(self, row, col, student):
         widthOffs = col * (self.tableWidth + 1) + (self.tableWidth/4) + self.seatingOffs #divide by 4, half of a half table
         heightOffs = row * (- self.tableHeight - 1) - self.seatingOffs
@@ -53,10 +54,21 @@ class BigRoom(Room):
         return '\n\\node [draw, minimum width=' + str(width) + 'cm, minimum height='+ str(height) + 'cm, anchor=base] at(' + str(widthOffs) + ',' + str(heightOffs) + ') {\\begin{varwidth}{' + str(width-0.5) + 'cm}' + '\large ' + name + '\\end{varwidth}};'
     
 
+
+
+
     def latexHeader(self):
         with open ("src/latex/bigRoom/studentHeader.tex") as texFile:
             return texFile.read()
 
     def latexFooter(self):
         with open ("src/latex/bigRoom/studentFooter.tex") as texFile:
+            return texFile.read()
+    
+    def adminLatexHeader(self):
+        with open ("src/latex/bigRoom/adminHeader.tex") as texFile:
+            return texFile.read()
+
+    def adminLatexFooter(self):
+        with open ("src/latex/bigRoom/adminFooter.tex") as texFile:
             return texFile.read()

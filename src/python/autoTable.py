@@ -83,6 +83,7 @@ def createSeatingPlan(noComputer, computerNeeded, allowNonComputerFolksInT26 = T
     T26Plan = ''
     if(len(computerNeeded) > 0):
         T26Plan = createRoomSeating(T26, computerNeeded)
+        T26Admin = createAdminPlan(T26, computerNeeded)
     
     numberOfNoComputer = len(noComputer)
     T13Plan = ''
@@ -109,5 +110,12 @@ def createRoomSeating(room, students):
     seating += room.latexFooter()
     return seating
 
+def createAdminPlan(room, students):
+    seating = room.adminLatexHeader()
+    seating += room.createAdminPlan(students)
+    seating += room.adminLatexFooter()
+    with open(texDir + '/' + "T26Admin.tex",'w') as file:
+        file.write(seating)
+    return 0
 
 main()
