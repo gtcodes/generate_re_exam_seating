@@ -1,4 +1,5 @@
 from room import Room
+from person import Person
 import math
 
 class BigRoom(Room):
@@ -38,6 +39,10 @@ class BigRoom(Room):
                     tableCode += self.wholeTable(row, col, students[currentStudent])
                     currentStudent += 1
         return tableCode
+
+    def drawBlankTable(self, row, col):
+        return(self.wholeTable(row,col,Person("","",False)))
+
     def wholeTable(self, row, col, student):
         widthOffs = col * (self.tableWidth + 1) + (self.tableWidth/4) + self.seatingOffs #divide by 4, half of a half table
         heightOffs = row * (- self.tableHeight - 1) - self.seatingOffs
