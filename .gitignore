@@ -1,9 +1,10 @@
 # Project specific
-*.tex
 *.xls
 *.aux
 *.log
 *.pdf
+*.swp
+output/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

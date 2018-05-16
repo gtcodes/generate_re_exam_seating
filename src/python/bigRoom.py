@@ -54,39 +54,9 @@ class BigRoom(Room):
     
 
     def latexHeader(self):
-        return( '\\documentclass{article}\n'
-            '\\usepackage[paperheight=420mm,paperwidth=297mm]{geometry}\n'
-            '\\usepackage[utf8]{inputenc}\n'
-            '\\usepackage{adjustbox}\n'
-            '\\usepackage{tikz}\n'
-            '\\usepackage{varwidth}\n'
-            '\\usepackage{pdflscape}\n'
-            '\n'
-            '\\setlength{\\topmargin}{8mm}\n'
-            '\\setlength{\\oddsidemargin}{0in}\n'
-            '\\setlength{\\evensidemargin}{0in}\n'
-            '\n'
-            '\\setlength{\\textheight}{370mm}\n'
-            '\\setlength{\\textwidth}{290mm}\n'
-            '\n'
-            '\\begin{document}\n'
-            '\\begin{landscape}\n'
-            '\n'
-            '\\begin{centering}\n'
-            '\\section*{\\Huge Fram mot tavla och scen} \\vspace{5mm}\n'
-            '\\end{centering}\n'
-            '\n'
-            '\\begin{tikzpicture}\n'
-            '\\node[draw=none]at(0,0){};\n'
-            )
+        with open ("src/latex/bigRoom/studentHeader.tex") as texFile:
+            return texFile.read()
 
     def latexFooter(self):
-        return( '\n'
-            '\\node[draw=none, rotate=90] at (38, -9) {\\Huge \\textbf{Resterande del av skolan}};\n'
-            '\n'
-            '\\end{tikzpicture}\n'
-            '\n'
-            '\\pagenumbering{gobble}\n'
-            '\\end{landscape}\n'
-            '\\end{document}\n'
-)
+        with open ("src/latex/bigRoom/studentFooter.tex") as texFile:
+            return texFile.read()

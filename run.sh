@@ -1,6 +1,8 @@
 #!/bin/bash
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+echo "$( dirname "${BASH_SOURCE[0]}" )"
 
-texDir="pdf"
+texDir="output"
 separator="\t"
 noCsv=1
 clearPdfDir=1
@@ -14,8 +16,8 @@ while getopts ":s:i:d:t:hp:kn" opt; do
       ;;
     h)
       printf "bash script for automatically creating seating plans for re-exams\n"
-      printf "use the script by running \n\n ./run -i <path/to/csv>. or ./run -i <date> to download the csv from the provning site."
-      printf "\n\nThis will generate tex files and pdfs in the supplied directory. The standard directory is ./pdf.\n"
+      printf "use the script by running \n\n ./run -i <path/to/csv>. or ./run -d <date> to download the csv from the prövning site."
+      printf "\n\nThis will generate tex files and pdfs in the supplied directory. The standard directory is ./output.\n"
       printf "The script will remove all .log and .aux files in the supplied tex directory. They can be kept by adding the -k flag\n"
       printf "\nsupported flags are:"
       printf "\n-s <separator>. This will set the specified <seperator> as the csv separator. The standard separator is tab."
@@ -65,11 +67,11 @@ if [ $download = 1 ]; then
   wget -O $fileName "82.193.176.94/provning/db/$date.xls"
 fi
 
-python3 python/autoTable.py $fileName $texDir $separator
+python3 src/python/autoTable.py $fileName $texDir $separator
 
 for file in $texDir/*.tex
 do
-    pdflatex -output-directory $texDir -no-file-line-error $file > "$texDir/pdflog.txt"
+    pdflatex -output-directory $texDir -no-file-line-error $file > "$texDir/pdfLog.txt"
 done
 
 if [ $print = 1 ]; then

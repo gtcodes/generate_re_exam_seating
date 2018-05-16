@@ -14,22 +14,13 @@ class ListRoom(Room):
     
     def getPaperSize(self):
         return ('A4')
-
+    
     def latexHeader(self):
-        return ('\\documentclass{article}\n'
-                '\\usepackage[utf8]{inputenc}\n'
-                '\n'
-                '\\begin{document}\n'
-                '\\begin{center}\n'
-                '\\huge T26\n'
-                '\\end{center}\n'
-                '\\vspace{7mm}\n'
-                '\\begin{itemize}\n'
-                '\\large\n'
-                )
-
+        
+        with open ("src/latex/listRoom/studentHeader.tex") as texFile:
+            return texFile.read()
 
     def latexFooter(self):
-        return ('\\end{itemize}\n'
-                '\\end{document}\n'
-                )
+        with open ("src/latex/listRoom/studentFooter.tex") as texFile:
+            return texFile.read()
+
