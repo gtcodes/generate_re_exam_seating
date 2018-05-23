@@ -1,5 +1,5 @@
 Kurs	Namn	Klass	Lärare	Typ	Provtid	Godkänd	Prov mottaget	
-Svenska	test efternamn	In2	something	Omprov	120 min	Ja	True	x
+Svenska	test efternamn	enKlass	something	Omprov	120 min	Ja	True	x
 Ekonomi A	test efternamn	something	missing	Prövning	200	Ja	False	
 Ekonomi A	äpple päron	testklass	missing	Prövning	60	Ja	False	
 Ekonomi A	tangentbord mus	testklass	missing	Prövning	210	Ja	False	

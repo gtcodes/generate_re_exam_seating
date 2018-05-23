@@ -82,10 +82,10 @@ if [ $print = 1 ]; then
     do
       while read p
       do
-        IFS=' '
+        IFS=';'
         read -ra Field <<< "$p"
-        if [ $texDir/${Field[0]} = "$file" ]; then
-          lp -d torg $file -o media="${Field[1]}" -n "$numberOfCopies"
+        if [ "$texDir/${Field[0]}.pdf" = "$file" ]; then
+          echo -d torg $file -o media="${Field[1]}" -n "$numberOfCopies"
         fi
       done <"$texDir/printInfo.txt"
     done

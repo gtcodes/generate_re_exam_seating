@@ -1,22 +1,25 @@
 from room import Room
-
+from printerInfoWriter import PrinterInfoWriter
 class ListRoom(Room):
     
     def __init__(self, name, col, row):
         super().__init__(name, col, row)
         self.texDir = "src/latex/listRoom/"
+        self.printerInfoWriter = PrinterInfoWriter()
 
     def createSeating(self, students):
         print("Room " + self.name + " has " + str(len(students)) + " students")
         seating = ''
         for s in students:
             seating += "\\item " + s.name + '\n'
+        self.printerInfoWriter.displayInfo(self.name + ";" + "A4" + ";" + "studentPlan")
         return(seating)
 
     def createAdminPlan(self, students):
         seating=''
         for s in students:
             seating += s.name + "&" + s.getTestTime() + '\\\\\n'
+        self.printerInfoWriter.displayInfo(self.name + ";" + self.getPaperSize() + ";" + "teacherPlan")
         return(seating)
     
     def getPaperSize(self):

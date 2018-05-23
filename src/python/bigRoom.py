@@ -1,15 +1,18 @@
 from room import Room
 from person import Person
+from printerInfoWriter import PrinterInfoWriter
 import math
 
 class BigRoom(Room):
     
     tableWidth = 5.4
     tableHeight = 2.5
-    
+    tableSpacing = 1
+
     def __init__(self, name, col, row, seatingOffs):
         super().__init__(name, col, row)
         self.seatingOffs = seatingOffs
+        self.printerInfoWriter=PrinterInfoWriter()
 
 
     def getPaperSize(self):
@@ -27,6 +30,7 @@ class BigRoom(Room):
             studentsInLastCol = len(students) % self.rows
         currentStudent = 0
         tableCode = ''
+        #adminCode = ''
         for col in range(0,self.cols):
             for row in range(0,self.rows):
                 if(currentStudent == len(students)):
@@ -34,23 +38,26 @@ class BigRoom(Room):
                     continue
                 if(col < numberOfDoubleCols or (col == numberOfDoubleCols and row < studentsInLastCol)):
                     tableCode += self.splitTable(row, col, students[currentStudent], students[currentStudent + 1])
+                    #adminCode += 
                     currentStudent += 2
                 else:
                     tableCode += self.wholeTable(row, col, students[currentStudent])
                     currentStudent += 1
+        self.printerInfoWriter.displayInfo(self.name + ";" + self.getPaperSize() + ";" + "studentPlan")
         return tableCode
 
+    
     def drawBlankTable(self, row, col):
         return(self.wholeTable(row,col,Person("","",False)))
 
     def wholeTable(self, row, col, student):
-        widthOffs = col * (self.tableWidth + 1) + (self.tableWidth/4) + self.seatingOffs #divide by 4, half of a half table
-        heightOffs = row * (- self.tableHeight - 1) - self.seatingOffs
+        widthOffs = col * (self.tableWidth + self.tableSpacing) + (self.tableWidth/4) + self.seatingOffs #divide by 4, half of a half table
+        heightOffs = row * (- self.tableHeight - self.tableSpacing) - self.seatingOffs
         return self.createTable(self.tableWidth, self.tableHeight, widthOffs, heightOffs, student.name)
 
     def splitTable(self, row, col, student1, student2):
-        widthOffs = col * (self.tableWidth + 1) + self.seatingOffs 
-        heightOffs = row * (- self.tableHeight - 1) - self.seatingOffs
+        widthOffs = col * (self.tableWidth + self.tableSpacing) + self.seatingOffs 
+        heightOffs = row * (- self.tableHeight - self.tableSpacing) - self.seatingOffs
         returnString = self.createTable(self.tableWidth/2, self.tableHeight, widthOffs, heightOffs, student1.name)
         returnString += self.createTable(self.tableWidth/2, self.tableHeight, widthOffs + self.tableWidth/2, heightOffs, student2.name)
         return returnString
@@ -58,10 +65,6 @@ class BigRoom(Room):
     def createTable(self, width, height, widthOffs, heightOffs, name):
         return '\n\\node [draw, minimum width=' + str(width) + 'cm, minimum height='+ str(height) + 'cm, anchor=base] at(' + str(widthOffs) + ',' + str(heightOffs) + ') {\\begin{varwidth}{' + str(width-0.5) + 'cm}' + '\large ' + name + '\\end{varwidth}};'
     
-
-
-
-
     def latexHeader(self):
         with open ("src/latex/bigRoom/studentHeader.tex") as texFile:
             return texFile.read()

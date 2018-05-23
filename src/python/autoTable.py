@@ -41,8 +41,6 @@ def main():
     (computerNeeded, noComputer) = splitStudents(uniqueStudents)
     plans = createSeatingPlan(noComputer, computerNeeded)
     #clear the printer info file
-    with open(texDir + '/' + 'printInfo.txt','w') as printInfoFile:
-        printInfoFile.write('\n') #empty to not allow single line files for some bash bug?
     for plan in plans:
         if(plan[1]!=''):
             baseFileName = plan[0].name
@@ -50,8 +48,6 @@ def main():
             pdfName = baseFileName + '.pdf'
             with open(texDir + '/' + fileName,'w') as f:
                 f.write(plan[1])
-            with open(texDir + '/' + 'printInfo.txt','a') as printInfoFile: #disgusting hack
-                printInfoFile.write(pdfName + ' ' + plan[0].getPaperSize()+'\n')
     
 # merge students that write multiple tests into one person
 # with a list of times rather than just a single value
