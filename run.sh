@@ -71,7 +71,7 @@ python3 src/python/autoTable.py $fileName $texDir $separator
 
 for file in $texDir/*.tex
 do
-    pdflatex -output-directory $texDir -no-file-line-error $file > "$texDir/pdfLog.txt"
+    pdflatex -output-directory $texDir -no-file-line-error $file #> "$texDir/pdfLog.txt"
 done
 
 if [ $print = 1 ]; then

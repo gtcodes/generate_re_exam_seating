@@ -42,12 +42,14 @@ def main():
     plans = createSeatingPlan(noComputer, computerNeeded)
     #clear the printer info file
     for plan in plans:
-        if(plan[1]!=''):
-            baseFileName = plan[0].name
+        if(plan[2]!=''):
+            baseFileName = plan[1].name
+            if(plan[0]):
+                baseFileName+='Admin'
             fileName = baseFileName + '.tex'
-            pdfName = baseFileName + '.pdf'
             with open(texDir + '/' + fileName,'w') as f:
-                f.write(plan[1])
+                print(fileName)
+                f.write(plan[2])
     
 # merge students that write multiple tests into one person
 # with a list of times rather than just a single value
@@ -57,7 +59,7 @@ def mergeDuplicates(students):
     while i < length - 1:
         if(students[i].name == students[i+1].name):
             students[i+1].merge(students[i])
-            length-=1
+            length -= 1
             del students[i]
         i += 1
     return students
@@ -85,20 +87,27 @@ def createSeatingPlan(noComputer, computerNeeded, allowNonComputerFolksInT26 = T
     T13Plan = ''
     T14Plan = ''
     T3Plan = ''
+    T13Admin = ''
+    T14Admin = ''
     if(numberOfNoComputer <= 36):
         T13Plan = createRoomSeating(T13, noComputer)
+        T13Admin = createAdminPlan(T13, NoComputer)
     elif(numberOfNoComputer <= 61):
         T13Plan = createRoomSeating(T13, noComputer[0:36])
+        T13Admin = createAdminPlan(T13, noComputer[0:36])
         T14Plan = createRoomSeating(T14, noComputer[36:])
+        T14Admin = createAdminPlan(T14, noComputer[36:])
     elif(numberOfNoComputer <= 97):
         T14Plan = createRoomSeating(T14, noComputer[0:25])
+        T14Admin = createAdminPlan(T14, noComputer[0:25])
         T13Plan = createRoomSeating(T13, noComputer[25:])
-    elif(noComputer <= 129):
-        T13Plan = createRoomSeating(T13, noComputer[0:72])
-        T14Plan = createRoomSeating(T14, noComputer[72:97])
-        T3Plan = createRoomSeating(T3, noComputer[97:])
+        T13Admin = createAdminPlan(T13, noComputer[25:])
+    #elif(noComputer <= 129):
+    #    T13Plan = createRoomSeating(T13, noComputer[0:72])
+    #    T14Plan = createRoomSeating(T14, noComputer[72:97])
+    #    T3Plan = createRoomSeating(T3, noComputer[97:])
 
-    return((T26,T26Plan), (T13, T13Plan),(T14,T14Plan),(T3,T3Plan))
+    return((False,T26,T26Plan), (False,T13,T13Plan), (False, T14,T14Plan), (True, T26, T26Admin), (True,T13, T13Admin), (True,T14, T14Admin))
 
 def createRoomSeating(room, students):
     seating = room.latexHeader()
@@ -110,8 +119,8 @@ def createAdminPlan(room, students):
     seating = room.adminLatexHeader()
     seating += room.createAdminPlan(students)
     seating += room.adminLatexFooter()
-    with open(texDir + '/' + "T26Admin.tex",'w') as file:
-        file.write(seating)
-    return 0
+    #with open(texDir + '/' + "T26Admin.tex",'w') as file:
+    #    file.write(seating)
+    return seating
 
 main()

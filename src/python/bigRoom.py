@@ -14,11 +14,18 @@ class BigRoom(Room):
         self.seatingOffs = seatingOffs
         self.printerInfoWriter=PrinterInfoWriter()
 
-
     def getPaperSize(self):
         return('A3')
 
     def createSeating(self, students):
+        self.printerInfoWriter.displayInfo(self.name + ";" + self.getPaperSize() + ";" + "adminPlan")
+        return(self.generateLatexCodeForSeating(students, False))
+
+    def createAdminPlan(self, students):
+        self.printerInfoWriter.displayInfo(self.name + ";" + self.getPaperSize() + ";" + "studentPlan")
+        return(self.generateLatexCodeForSeating(students, True))
+
+    def generateLatexCodeForSeating(self, students, includeTimes):
         print("Room " + self.name + " has " + str(len(students)) + " students")
         colsNeeded = math.floor(len(students) / self.rows)
         if(colsNeeded > 2 * self.cols):
@@ -30,7 +37,6 @@ class BigRoom(Room):
             studentsInLastCol = len(students) % self.rows
         currentStudent = 0
         tableCode = ''
-        #adminCode = ''
         for col in range(0,self.cols):
             for row in range(0,self.rows):
                 if(currentStudent == len(students)):
@@ -38,29 +44,51 @@ class BigRoom(Room):
                     continue
                 if(col < numberOfDoubleCols or (col == numberOfDoubleCols and row < studentsInLastCol)):
                     tableCode += self.splitTable(row, col, students[currentStudent], students[currentStudent + 1])
-                    #adminCode += 
                     currentStudent += 2
+                    if(includeTimes):
+                        tableCode += self.timeUnderSplitTable(row, col, students[currentStudent], students[currentStudent + 1])
                 else:
                     tableCode += self.wholeTable(row, col, students[currentStudent])
+                    if(includeTimes):
+                        tableCode += self.timeUnderWholeTable(row, col, students[currentStudent])
                     currentStudent += 1
-        self.printerInfoWriter.displayInfo(self.name + ";" + self.getPaperSize() + ";" + "studentPlan")
         return tableCode
 
-    
     def drawBlankTable(self, row, col):
         return(self.wholeTable(row,col,Person("","",False)))
+    
+    def getWidthOffs(self, col):
+        return col * (self.tableWidth + self.tableSpacing) + self.seatingOffs
+
+    def getHeightOffs(self, row):
+        return row * (- self.tableHeight - self.tableSpacing) - self.seatingOffs
 
     def wholeTable(self, row, col, student):
-        widthOffs = col * (self.tableWidth + self.tableSpacing) + (self.tableWidth/4) + self.seatingOffs #divide by 4, half of a half table
-        heightOffs = row * (- self.tableHeight - self.tableSpacing) - self.seatingOffs
+        widthOffs = self.getWidthOffs(col) + self.tableWidth/4 #divide by 4, half of a half table
+        heightOffs = self.getHeightOffs(row)
         return self.createTable(self.tableWidth, self.tableHeight, widthOffs, heightOffs, student.name)
+    
+    def timeUnderWholeTable(self,row,col,student1):
+        widthOffs = self.getWidthOffs(col) + self.tableHeight/2
+        heightOffs = self.getHeightOffs(row) - self.tableHeight/2 - 0.2
+        return self.createTimeNode(widthOffs, heightOffs, student1.testTime)
 
     def splitTable(self, row, col, student1, student2):
-        widthOffs = col * (self.tableWidth + self.tableSpacing) + self.seatingOffs 
-        heightOffs = row * (- self.tableHeight - self.tableSpacing) - self.seatingOffs
+        widthOffs = self.getWidthOffs(col)
+        heightOffs = self.getHeightOffs(row)
         returnString = self.createTable(self.tableWidth/2, self.tableHeight, widthOffs, heightOffs, student1.name)
         returnString += self.createTable(self.tableWidth/2, self.tableHeight, widthOffs + self.tableWidth/2, heightOffs, student2.name)
         return returnString
+    
+    def timeUnderSplitTable(self, row, col, student1, student2):
+        widthOffs = self.getWidthOffs(col)
+        heightOffs = self.getHeightOffs(row) - self.tableHeight/2 - 0.2
+        returnString = self.createTimeNode(widthOffs, heightOffs, student1.testTime)
+        returnString += self.createTimeNode(widthOffs + self.tableWidth/2, heightOffs, student2.testTime)
+        return returnString
+    
+    def createTimeNode(self, widthOffs, heightOffs, time):
+        return '\n\\node[ anchor=base] at(' + str(widthOffs)+ ',' + str(heightOffs) + ') {'+ str(time) + '};'
 
     def createTable(self, width, height, widthOffs, heightOffs, name):
         return '\n\\node [draw, minimum width=' + str(width) + 'cm, minimum height='+ str(height) + 'cm, anchor=base] at(' + str(widthOffs) + ',' + str(heightOffs) + ') {\\begin{varwidth}{' + str(width-0.5) + 'cm}' + '\large ' + name + '\\end{varwidth}};'

@@ -25,6 +25,10 @@ class Room(ABC):
         return NotImplemented
 
     @abstractmethod
+    def createAdminPlan(self, students):
+        return NotImplemented
+
+    @abstractmethod
     def latexHeader(self):
         return NotImplemented
 
