@@ -86,7 +86,11 @@ if [ $print = 1 ]; then
         read -ra Field <<< "$p"
         if [ "$texDir/${Field[0]}.pdf" = "$file" ]; then
           echo "printing file: $file"
-          echo "lp -d torg $file -o media="${Field[1]}" -n "$numberOfCopies""
+          if [ ${Field[2]} = "studentPlan" ]; then
+            lp -d torg $file -o media="${Field[1]}" -n "$numberOfCopies"
+          else #you could check that it is indeed adminPlan
+            lp -d torg $file -o media="${Field[1]}"
+          fi
         fi
       done <"$texDir/printInfo.txt"
     done
