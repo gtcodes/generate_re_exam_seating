@@ -7,19 +7,19 @@ class ListRoom(Room):
         self.texDir = "src/latex/listRoom/"
         self.printerInfoWriter = PrinterInfoWriter()
 
-    def createSeating(self, students):
+    def createSeating(self, students, planName):
         print("Room " + self.name + " has " + str(len(students)) + " students")
         seating = ''
         for s in students:
             seating += "\\item " + s.name + '\n'
-        self.printerInfoWriter.displayInfo(self.name + ";" + "A4" + ";" + "studentPlan")
+        self.printerInfoWriter.displayInfo(planName + ";" + "A4" + ";" + "studentPlan")
         return(seating)
 
-    def createAdminPlan(self, students):
+    def createAdminPlan(self, students, planName):
         seating=''
         for s in students:
             seating += s.name + "&" + s.getTestTime() + '\\\\\n'
-        self.printerInfoWriter.displayInfo(self.name + ";" + self.getPaperSize() + ";" + "teacherPlan")
+        self.printerInfoWriter.displayInfo(planName + ";" + self.getPaperSize() + ";" + "teacherPlan")
         return(seating)
     
     def getPaperSize(self):

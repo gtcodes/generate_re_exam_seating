@@ -17,12 +17,12 @@ class BigRoom(Room):
     def getPaperSize(self):
         return('A3')
 
-    def createSeating(self, students):
-        self.printerInfoWriter.displayInfo(self.name + ";" + self.getPaperSize() + ";" + "adminPlan")
+    def createSeating(self, students, planName):
+        self.printerInfoWriter.displayInfo(planName + ";" + self.getPaperSize() + ";" + "adminPlan")
         return(self.generateLatexCodeForSeating(students, False))
 
-    def createAdminPlan(self, students):
-        self.printerInfoWriter.displayInfo(self.name + ";" + self.getPaperSize() + ";" + "studentPlan")
+    def createAdminPlan(self, students, planName):
+        self.printerInfoWriter.displayInfo(planName + ";" + self.getPaperSize() + ";" + "studentPlan")
         return(self.generateLatexCodeForSeating(students, True))
 
     def generateLatexCodeForSeating(self, students, includeTimes):

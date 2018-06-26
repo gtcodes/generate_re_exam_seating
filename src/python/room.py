@@ -21,11 +21,11 @@ class Room(ABC):
         return (2*self.optNumberOfPeople())
 
     @abstractmethod
-    def createSeating(self, students):
+    def createSeating(self, students, planName):
         return NotImplemented
 
     @abstractmethod
-    def createAdminPlan(self, students):
+    def createAdminPlan(self, students, planName):
         return NotImplemented
 
     @abstractmethod

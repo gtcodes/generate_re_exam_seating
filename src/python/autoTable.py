@@ -80,8 +80,8 @@ def createSeatingPlan(noComputer, computerNeeded, allowNonComputerFolksInT26 = T
         print("WARNING! More than 32 people need computer.")
     T26Plan = ''
     if(len(computerNeeded) > 0):
-        T26Plan = createRoomSeating(T26, computerNeeded)
-        T26Admin = createAdminPlan(T26, computerNeeded)
+        T26Plan = createRoomSeating(T26, computerNeeded,"T26")
+        T26Admin = createAdminPlan(T26, computerNeeded,"T26Admin")
     
     numberOfNoComputer = len(noComputer)
     T13Plan = ''
@@ -90,18 +90,18 @@ def createSeatingPlan(noComputer, computerNeeded, allowNonComputerFolksInT26 = T
     T13Admin = ''
     T14Admin = ''
     if(numberOfNoComputer <= 36):
-        T13Plan = createRoomSeating(T13, noComputer)
-        T13Admin = createAdminPlan(T13, NoComputer)
+        T13Plan = createRoomSeating(T13, noComputer, "T13")
+        T13Admin = createAdminPlan(T13, NoComputer, "T13Admin")
     elif(numberOfNoComputer <= 61):
-        T13Plan = createRoomSeating(T13, noComputer[0:36])
-        T13Admin = createAdminPlan(T13, noComputer[0:36])
-        T14Plan = createRoomSeating(T14, noComputer[36:])
-        T14Admin = createAdminPlan(T14, noComputer[36:])
+        T13Plan = createRoomSeating(T13, noComputer[0:36],"T13")
+        T13Admin = createAdminPlan(T13, noComputer[0:36],"T13Admin")
+        T14Plan = createRoomSeating(T14, noComputer[36:],"T14")
+        T14Admin = createAdminPlan(T14, noComputer[36:],"T14Admin")
     elif(numberOfNoComputer <= 97):
-        T14Plan = createRoomSeating(T14, noComputer[0:25])
-        T14Admin = createAdminPlan(T14, noComputer[0:25])
-        T13Plan = createRoomSeating(T13, noComputer[25:])
-        T13Admin = createAdminPlan(T13, noComputer[25:])
+        T14Plan = createRoomSeating(T14, noComputer[0:25],"T14")
+        T14Admin = createAdminPlan(T14, noComputer[0:25],"T14Admin")
+        T13Plan = createRoomSeating(T13, noComputer[25:],"T13")
+        T13Admin = createAdminPlan(T13, noComputer[25:],"T13Admin")
     #elif(noComputer <= 129):
     #    T13Plan = createRoomSeating(T13, noComputer[0:72])
     #    T14Plan = createRoomSeating(T14, noComputer[72:97])
@@ -109,15 +109,15 @@ def createSeatingPlan(noComputer, computerNeeded, allowNonComputerFolksInT26 = T
 
     return((False,T26,T26Plan), (False,T13,T13Plan), (False, T14,T14Plan), (True, T26, T26Admin), (True,T13, T13Admin), (True,T14, T14Admin))
 
-def createRoomSeating(room, students):
+def createRoomSeating(room, students, planName):
     seating = room.latexHeader()
-    seating += room.createSeating(students)
+    seating += room.createSeating(students, planName)
     seating += room.latexFooter()
     return seating
 
-def createAdminPlan(room, students):
+def createAdminPlan(room, students,planName):
     seating = room.adminLatexHeader()
-    seating += room.createAdminPlan(students)
+    seating += room.createAdminPlan(students, planName)
     seating += room.adminLatexFooter()
     #with open(texDir + '/' + "T26Admin.tex",'w') as file:
     #    file.write(seating)
