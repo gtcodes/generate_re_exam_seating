@@ -80,16 +80,16 @@ if [ $print = 1 ]; then
   if [ "$awns" == "y" ]; then
     for file in $texDir/*.pdf
     do
-      while read p
+      while read p # for each row of the input file
       do
         IFS=';'
-        read -ra Field <<< "$p"
-        if [ "$texDir/${Field[0]}.pdf" = "$file" ]; then
+        read -ra Field <<< "$p" # split on ; and put into variable Field. Acts like an array
+        if [ "$texDir/${Field[0]}.pdf" = "$file" ]; then # Finds settings that match the file
           echo "printing file: $file"
           if [ ${Field[2]} = "studentPlan" ]; then
             lp -d torg $file -o media="${Field[1]}" -n "$numberOfCopies"
-          else #you could check that it is indeed adminPlan
-            lp -d torg $file -o media="${Field[1]}"
+          else  # you could check that it is indeed adminPlan
+            lp -d torg $file -o media="${Field[1]}" -n 1 # assumes you want 1 admin copy
           fi
         fi
       done <"$texDir/printInfo.txt"
@@ -97,6 +97,8 @@ if [ $print = 1 ]; then
   fi
 fi
 
+# removes all aux and log files from the pdf latex complication
+# unless a flag is added to keep them
 if [ $clearPdfDir = 1 ]; then
   for i in $texDir/*.aux $texDir/*.log
     do
