@@ -22,7 +22,7 @@ def readGTCCsv(inputFile, delim = '\t', hasComputerCol = 8, nameCol = 1, timeCol
         for lines in csvFile:
             personRow = [x.strip() for x in lines.split(delim)]
             if(personRow[acceptedCol] == "Ja"):
-                hasComputer = (personRow[hasComputerCol] == 'x')
+                hasComputer = (personRow[hasComputerCol] == "True")
                 p = Person(personRow[nameCol], personRow[timeCol], hasComputer)
                 returnList.append(p)
     return returnList
@@ -79,6 +79,7 @@ def createSeatingPlan(noComputer, computerNeeded, allowNonComputerFolksInT26 = T
     if(len(computerNeeded) > 32):
         print("WARNING! More than 32 people need computer.")
     T26Plan = ''
+    T26Admin = ''
     if(len(computerNeeded) > 0):
         T26Plan = createRoomSeating(T26, computerNeeded,"T26")
         T26Admin = createAdminPlan(T26, computerNeeded,"T26Admin")
@@ -91,7 +92,7 @@ def createSeatingPlan(noComputer, computerNeeded, allowNonComputerFolksInT26 = T
     T14Admin = ''
     if(numberOfNoComputer <= 36):
         T13Plan = createRoomSeating(T13, noComputer, "T13")
-        T13Admin = createAdminPlan(T13, NoComputer, "T13Admin")
+        T13Admin = createAdminPlan(T13, noComputer, "T13Admin")
     elif(numberOfNoComputer <= 61):
         T13Plan = createRoomSeating(T13, noComputer[0:36],"T13")
         T13Admin = createAdminPlan(T13, noComputer[0:36],"T13Admin")
