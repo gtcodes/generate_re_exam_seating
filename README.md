@@ -3,17 +3,17 @@
 ## usage
 Use the program by running:
 ```
-./run -i <file name>
+./run.sh -i <file name>
 ```
 or:
 
 ```
-./run -d <yyyy-mm-dd>
+./run.sh -d <yyyy-mm-dd>
 ```
 
 You can also supply more flags to the script. Run
 ```
-./run -h
+./run.sh -h
 ```
 To see them all.
 
