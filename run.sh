@@ -67,6 +67,11 @@ if [ $download = 1 ]; then
   wget -O $fileName "82.193.176.94/provning/db/$date.xls"
 fi
 
+# clear output dir
+cd $texDir
+rm *
+cd ..
+
 python3 src/python/autoTable.py $fileName $texDir $separator
 
 for file in $texDir/*.tex
