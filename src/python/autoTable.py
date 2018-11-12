@@ -6,7 +6,7 @@ from bigRoom import BigRoom
 from person import Person
 
 #T26 - 15 bord, 2 med 3 platser
-T13 = BigRoom("T13",5,6,0)
+T13 = BigRoom("T13",6,5,0)
 T14 = BigRoom("T14",5,5,4)
 T26 = ListRoom("T26",3,5)
 T3 = ListRoom("T3",4,4)
